@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction</h1>
+
+        <div class="form-container">
+            <form action="/predict" method="POST">
+                <label for="ship_mode">Ship Mode:</label>
+                <select name="ship_mode" id="ship_mode">
+                    <option value="Second Class">Second Class</option>
+                    <option value="Standard Class">Standard Class</option>
+                    <option value="First Class">First Class</option>
+                    <option value="Same Day">Same Day</option>
+                </select>
+
+                <br><br>
+
+                <label for="segment">Segment:</label>
+                <select name="segment" id="segment">
+                    <option value="Consumer">Consumer</option>
+                    <option value="Corporate">Corporate</option>
+                    <option value="Home Office">Home Office</option>
+                </select>
+
+                <br><br>
+
+                <label for="city">City:</label>
+                <select name="city" id="city">
+                    <option value="">Select a city</option>
+                </select>
+
+                <br><br>
+
+                <label for="state">State:</label>
+                <select name="state" id="state" onchange="updateCities()"> <!-- Add onchange event -->
+                    <option value="">Select a state</option>
+                    {% for state in states %}
+                        <option value="{{ state }}">{{ state }}</option>
+                    {% endfor %}
+                </select>
+
+                <br><br>
+
+                <label for="region">Region:</label>
+                <select name="region" id="region" onchange="updateStates()">
+                    <option value="">Select a region</option>
+                    {% for region in regions %}
+                        <option value="{{ region }}">{{ region }}</option>
+                    {% endfor %}
+                </select>
+
+                <br><br>
+
+                <label for="category">Category:</label>
+                <select name="category" id="category" onchange="updateSubCategories()">
+                    <option value="">Select a category</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+
+                <br><br>
+
+                <label for="sub_category">Sub-Category:</label>
+                <select name="sub_category" id="sub_category">
+                    <option value="">Select a category first</option>
+                </select>
+
+                <br><br>
+
+                <label for="sales">Sales:</label>
+                <input type="text" name="sales" id="sales" required>
+
+                <br><br>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" id="quantity" required>
+
+                <br><br>
+
+                <label for="discount">Discount:</label>
+                <input type="text" name="discount" id="discount" required>
+
+                <br><br>
+
+                <button type="submit">Predict Profit/Loss</button>
+            </form>
+        </div>
+
+        <div class="chart-container">
+            {% if prediction is defined %}
+                <div>
+                    <h2>Prediction Result:</h2>
+                    <p>Profit/Loss: {{ prediction }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code for updating sub-categories based on the selected category
+        function updateSubCategories() {
+            var categorySelect = document.getElementById("category");
+            var subCategorySelect = document.getElementById("sub_category");
+            var selectedCategory = categorySelect.options[categorySelect.selectedIndex].value;
+
+            // Retrieve sub-categories based on the selected category
+            var subCategories = {{ sub_categories|tojson }};
+
+            subCategorySelect.innerHTML = ""; // Clear previous options
+
+            if (selectedCategory in subCategories) {
+                subCategorySelect.disabled = false;
+                var subCategoryOptions = subCategories[selectedCategory];
+                for (var i = 0; i < subCategoryOptions.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = subCategoryOptions[i];
+                    subCategorySelect.add(option);
+                }
+            } else {
+                subCategorySelect.disabled = true;
+                var option = document.createElement("option");
+                option.text = "No sub-categories available";
+                subCategorySelect.add(option);
+            }
+        }
+
+        // JavaScript code for updating states based on the selected region
+        function updateStates() {
+            var regionSelect = document.getElementById("region");
+            var stateSelect = document.getElementById("state");
+            var selectedRegion = regionSelect.options[regionSelect.selectedIndex].value;
+
+            // Send a POST request to /get_states to get the states for the selected region
+            fetch('/get_states', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ selected_region: selectedRegion }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                stateSelect.innerHTML = "<option value=''>Select a state</option>";
+                data.states.forEach(state => {
+                    var option = document.createElement("option");
+                    option.text = state;
+                    stateSelect.add(option);
+                });
+            });
+        }
+
+        // JavaScript code for updating cities based on the selected state
+        function updateCities() {
+            var stateSelect = document.getElementById("state");
+            var citySelect = document.getElementById("city");
+            var selectedState = stateSelect.options[stateSelect.selectedIndex].value;
+
+            // Send a POST request to /get_cities to get the cities for the selected state
+            fetch('/get_cities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ selected_state: selectedState }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                citySelect.innerHTML = "<option value=''>Select a city</option>";
+                data.cities.forEach(city => {
+                    var option = document.createElement("option");
+                    option.text = city;
+                    citySelect.add(option);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
