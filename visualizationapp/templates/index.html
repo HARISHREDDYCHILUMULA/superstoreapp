@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Visualization</title>
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Data Visualization</h1>
+
+        <!-- Input Section -->
+        <div class="form-container">
+            <h2>Configure Visualization</h2>
+            <form action="/chart" method="POST">
+                <label for="visualization_type">Visualization Type:</label>
+                <select name="visualization_type" id="visualization_type">
+                    <option value="scatter">Scatter Plot</option>
+                    <option value="pie">Pie Chart</option>
+                    <option value="bar">Bar Chart</option>
+                    <option value="line">Line Chart</option>
+                    <option value="boxplot">Box Plot</option>
+                    <option value="columnchart">Column Chart</option>
+                    <option value="areachart">Area Chart</option>
+                    <!-- Add more options for other visualization types -->
+                </select>
+            
+                <br><br>
+            
+                <label for="selected_attributes">Select Attributes:</label>
+                <select name="selected_attributes" id="selected_attributes" multiple size="5">
+                    {% for column in columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            
+                <br><br>
+            
+                <button type="submit">Create Visualization</button>
+            </form>
+        </div>
+
+        <!-- Graph/Plot Section -->
+        <div class="chart-container">
+            {% if chart_div %}
+                <h2>Visualization</h2>
+                <div>
+                    {{ chart_div | safe }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

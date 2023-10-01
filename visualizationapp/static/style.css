@@ -1,0 +1,90 @@
+/* Updated CSS for an attractive design */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.form-container {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    width: 70%;
+    max-width: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-container select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3366FF;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+.form-container select:hover {
+    border-color: #2255AA;
+    background-color: #E6F7FF;
+    box-shadow: 0 0 8px rgba(51, 102, 255, 0.5);
+}
+
+/* Raised button with attractive color changes on hover */
+.form-container .center-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.form-container button {
+    padding: 14px 28px;
+    background-color: #3366FF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for raised effect */
+}
+
+.form-container button:hover {
+    background-color: #2255AA;
+    transform: translateY(-3px); /* Raise button slightly on hover */
+}
+
+/* Updated CSS for maintaining graph/plot field width */
+/* ... (Previous CSS styles) */
+
+/* Ensure the chart container maintains its width */
+.chart-container {
+    text-align: center;
+    width: 100%; /* Set the width to 100% */
+    max-width: 100%; /* Optionally, limit the maximum width */
+}
+
